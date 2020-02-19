@@ -4,7 +4,10 @@ import (
 	"os"
 
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -14,6 +17,7 @@ type Clientset interface {
 	GetConfig() *rest.Config
 	GetClient() (*kubernetes.Clientset, error)
 	GetExtClient() (*apiextensionsclient.Clientset, error)
+	GetRestClient(*schema.GroupVersion, bool) (*rest.RESTClient, error)
 }
 
 // ClientsetImpl todo
@@ -43,6 +47,19 @@ func (s *ClientsetImpl) GetExtClient() (*apiextensionsclient.Clientset, error) {
 		return nil, err
 	}
 	return clientset, nil
+}
+
+// GetRestClient todo
+func (s *ClientsetImpl) GetRestClient(groupVersion *schema.GroupVersion, unversion bool) (*rest.RESTClient, error) {
+	cfg := s.GetConfig()
+	cfg.ContentConfig.GroupVersion = groupVersion
+	cfg.APIPath = "/apis"
+	cfg.NegotiatedSerializer = serializer.DirectCodecFactory{CodecFactory: scheme.Codecs}
+	cfg.UserAgent = rest.DefaultKubernetesUserAgent()
+	if unversion {
+		return rest.UnversionedRESTClientFor(cfg)
+	}
+	return rest.RESTClientFor(cfg)
 }
 
 // GetK8sClient todo

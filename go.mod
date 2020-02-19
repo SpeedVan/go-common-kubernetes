@@ -21,6 +21,6 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	k8s.io/api v0.0.0-20190325185214-7544f9db76f6 // indirect
 	k8s.io/apiextensions-apiserver v0.0.0-20190325193401-d18a370cab86
-	k8s.io/apimachinery v0.0.0-20190223001710-c182ff3b9841 // indirect
+	k8s.io/apimachinery v0.0.0-20190223001710-c182ff3b9841
 	k8s.io/client-go v0.0.0-20190325185812-c4d6791c962c
 )
