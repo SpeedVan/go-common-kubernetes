@@ -5,6 +5,7 @@ import (
 
 	apiextensionsclient "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -53,7 +54,7 @@ func (s *ClientsetImpl) GetRestClient(groupVersion *schema.GroupVersion, unversi
 	cfg := s.GetConfig()
 	cfg.ContentConfig.GroupVersion = groupVersion
 	cfg.APIPath = "/apis"
-	cfg.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
+	cfg.NegotiatedSerializer = serializer.WithoutConversionCodecFactory{CodecFactory: scheme.Codecs}
 	cfg.UserAgent = rest.DefaultKubernetesUserAgent()
 	if unversion {
 		return rest.UnversionedRESTClientFor(cfg)
