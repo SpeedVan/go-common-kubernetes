@@ -1,4 +1,4 @@
-module github.com/SpeedVan/go-common-kubernetes
+module github.com/alpha-supsys/go-common-kubernetes
 
 go 1.13
 
